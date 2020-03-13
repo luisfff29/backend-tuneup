@@ -8,6 +8,7 @@ import cProfile
 import pstats
 import functools
 import timeit
+import io
 
 
 def profile(func):
@@ -15,7 +16,19 @@ def profile(func):
     # You need to understand how decorators are constructed and used.
     # Be sure to review the lesson material on decorators, they are used
     # extensively in Django and Flask.
-    raise NotImplementedError("Complete this decorator function")
+    def decorator(*args, **kwargs):
+        pr = cProfile.Profile()
+        pr.enable()
+        function = func(*args, **kwargs)
+        pr.disable()
+        s = io.StringIO()
+        sortby = 'cumulative'
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats()
+        print s.getvalue()
+        return function
+
+    return decorator
 
 
 def read_movies(src):
@@ -46,9 +59,11 @@ def find_duplicate_movies(src):
 
 def timeit_helper(num=5):
     """Part A:  Obtain some profiling measurements using timeit"""
-    t = timeit.Timer("print('main statement')", "print('setup')")
+    t = timeit.Timer(stmt='pass',  setup='pass')
+    # stmt="find_duplicate_movies('movies.txt')",
+    # setup='from __main__ import find_duplicate_movies'
     result = t.repeat(repeat=7, number=num)
-    print('Best time across {} repeats of {} runs per repeat: {}'.format(
+    print('Best time across {} repeats of {} runs per repeat: {} sec'.format(
         len(result), num, sum(result)/len(result)))
 
 
