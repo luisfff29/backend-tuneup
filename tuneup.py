@@ -21,7 +21,7 @@ def profile(func):
         pr.enable()
         function = func(*args, **kwargs)
         pr.disable()
-        s = io.StringIO()
+        s = io.BytesIO()
         sortby = 'cumulative'
         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
         ps.print_stats()
@@ -46,6 +46,7 @@ def is_duplicate(title, movies):
     return False
 
 
+@profile
 def find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list"""
     movies = read_movies(src)
@@ -59,9 +60,8 @@ def find_duplicate_movies(src):
 
 def timeit_helper(num=5):
     """Part A:  Obtain some profiling measurements using timeit"""
-    t = timeit.Timer(stmt='pass',  setup='pass')
-    # stmt="find_duplicate_movies('movies.txt')",
-    # setup='from __main__ import find_duplicate_movies'
+    t = timeit.Timer(stmt="find_duplicate_movies('movies.txt')",
+                     setup='from __main__ import find_duplicate_movies')
     result = t.repeat(repeat=7, number=num)
     print('Best time across {} repeats of {} runs per repeat: {} sec'.format(
         len(result), num, sum(result)/len(result)))
