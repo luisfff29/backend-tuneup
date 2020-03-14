@@ -16,6 +16,7 @@ def profile(func):
     # You need to understand how decorators are constructed and used.
     # Be sure to review the lesson material on decorators, they are used
     # extensively in Django and Flask.
+    @functools.wraps(func)
     def decorator(*args, **kwargs):
         pr = cProfile.Profile()
         pr.enable()
@@ -64,7 +65,7 @@ def timeit_helper(num=5):
                      setup='from __main__ import find_duplicate_movies')
     result = t.repeat(repeat=7, number=num)
     print('Best time across {} repeats of {} runs per repeat: {} sec'.format(
-        len(result), num, sum(result)/len(result)))
+        len(result), num, min(result)))
 
 
 def main():
