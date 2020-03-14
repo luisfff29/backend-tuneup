@@ -72,14 +72,17 @@ def timeit_helper(num=5):
 
 def main(src='movies.txt'):
     """Computes a list of duplicate movie entries"""
+    # Create parser for Part A
     parser = argparse.ArgumentParser(description="Part A")
     parser.add_argument(
         '--partA', help='Print the best time for part A', action='store_true')
     args = parser.parse_args()
     if args.partA:
+        # Call function when '--partA' is applied
         timeit_helper()
 
     print('Reading file: {}'.format(src))
+    # Apply decorator to function
     find_duplicate_movies_decorated = profile(find_duplicate_movies)
     result = find_duplicate_movies_decorated(src)
     print('Found {} duplicate movies:'.format(len(result)))
