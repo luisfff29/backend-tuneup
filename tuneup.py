@@ -9,6 +9,7 @@ import pstats
 import functools
 import timeit
 import io
+import argparse
 
 
 def profile(func):
@@ -34,7 +35,6 @@ def profile(func):
 
 def read_movies(src):
     """Returns a list of movie titles"""
-    print('Reading file: {}'.format(src))
     with open(src, 'r') as f:
         return f.read().splitlines()
 
@@ -47,7 +47,6 @@ def is_duplicate(title, movies):
     return False
 
 
-@profile
 def find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list"""
     movies = read_movies(src)
@@ -61,16 +60,28 @@ def find_duplicate_movies(src):
 
 def timeit_helper(num=5):
     """Part A:  Obtain some profiling measurements using timeit"""
+    print('Printing the best time...')
     t = timeit.Timer(stmt="find_duplicate_movies('movies.txt')",
                      setup='from __main__ import find_duplicate_movies')
     result = t.repeat(repeat=7, number=num)
-    print('Best time across {} repeats of {} runs per repeat: {} sec'.format(
+    print ''
+    print('\tBest time across {} repeats of {} runs per repeat: {} sec'.format(
         len(result), num, min(result)))
+    print ''
 
 
-def main():
+def main(src='movies.txt'):
     """Computes a list of duplicate movie entries"""
-    result = find_duplicate_movies('movies.txt')
+    parser = argparse.ArgumentParser(description="Part A")
+    parser.add_argument(
+        '--partA', help='Print the best time for part A', action='store_true')
+    args = parser.parse_args()
+    if args.partA:
+        timeit_helper()
+
+    print('Reading file: {}'.format(src))
+    find_duplicate_movies_decorated = profile(find_duplicate_movies)
+    result = find_duplicate_movies_decorated(src)
     print('Found {} duplicate movies:'.format(len(result)))
     print('\n'.join(result))
 
