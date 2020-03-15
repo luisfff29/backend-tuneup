@@ -48,11 +48,10 @@ def is_duplicate(title, movies):
 def find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list"""
     movies = read_movies(src)
+    movies.sort()
     duplicates = []
-    while movies:
-        movie = movies[0]
-        movies = movies[1:]
-        if is_duplicate(movie, movies):
+    for i, movie in enumerate(movies[:-1]):
+        if movie == movies[i+1]:
             duplicates.append(movie)
     return duplicates
 
