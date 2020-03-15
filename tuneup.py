@@ -43,7 +43,6 @@ def is_duplicate(title, movies):
     """returns True if title is within movies list"""
     if title in movies:
         return True
-    return False
 
 
 def find_duplicate_movies(src):
@@ -51,7 +50,8 @@ def find_duplicate_movies(src):
     movies = read_movies(src)
     duplicates = []
     while movies:
-        movie = movies.pop()
+        movie = movies[0]
+        movies = movies[1:]
         if is_duplicate(movie, movies):
             duplicates.append(movie)
     return duplicates
