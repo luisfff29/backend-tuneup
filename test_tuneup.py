@@ -1,6 +1,7 @@
+""" Test Suite for tuneup module. """
 import unittest
 import timeit
-from tuneup import find_duplicate_movies
+from tuneup import find_duplicate_movies, profile
 
 
 # Using the previous function to check performance
@@ -20,6 +21,7 @@ def test_is_duplicate(title, movies):
     return False
 
 
+@profile
 def test_find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list"""
     movies = test_read_movies(src)
@@ -36,17 +38,16 @@ def test_find_duplicate_movies(src):
 class TestTuneUp(unittest.TestCase):
     """Tuneup test case."""
 
-    def test_function(self):
+    def test_tuneup(self):
         initial_time = timeit.Timer(
             lambda: test_find_duplicate_movies('movies.txt')).timeit(number=1)
         performance_time = initial_time / 670
         my_time = timeit.Timer(lambda: find_duplicate_movies(
             'movies.txt')).timeit(number=1)
-        my_time = round(my_time, 3)
         failure_text = (
-            "find_duplicates_movies took {} seconds, which it doesn't achieve "
-            "at least a 670x improvement of performance".format(my_time)
-        )
+            "find_duplicates_movies took {:.3f} seconds, which it "
+            "doesn't achieve at least a 670x improvement of performance "
+            "({:.3f})".format(my_time, performance_time))
         self.assertTrue(my_time <= performance_time, failure_text)
 
 

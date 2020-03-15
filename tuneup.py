@@ -41,9 +41,8 @@ def read_movies(src):
 
 def is_duplicate(title, movies):
     """returns True if title is within movies list"""
-    for movie in movies:
-        if movie.lower() == title.lower():
-            return True
+    if title in movies:
+        return True
     return False
 
 
@@ -64,7 +63,6 @@ def timeit_helper(num=5):
     t = timeit.Timer(stmt="find_duplicate_movies('movies.txt')",
                      setup='from __main__ import find_duplicate_movies')
     result = t.repeat(repeat=7, number=num)
-    print ''
     print('\tBest time across {} repeats of {} runs per repeat: {} sec'.format(
         len(result), num, min(result)))
     print ''
@@ -77,14 +75,14 @@ def main(src='movies.txt'):
     parser.add_argument(
         '--partA', help='Print the best time for part A', action='store_true')
     args = parser.parse_args()
+    # Call function when '--partA' is applied
     if args.partA:
-        # Call function when '--partA' is applied
         timeit_helper()
 
-    print('Reading file: {}'.format(src))
-    # Apply decorator to function
+    # Apply decorator to the function
     find_duplicate_movies_decorated = profile(find_duplicate_movies)
     result = find_duplicate_movies_decorated(src)
+    print('Reading file: {}'.format(src))
     print('Found {} duplicate movies:'.format(len(result)))
     print('\n'.join(result))
 
